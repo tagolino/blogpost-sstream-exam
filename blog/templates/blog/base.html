@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog App</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'blogpost-list' %}">Blog Posts</a> |
+        <a href="{% url 'topic-list' %}">Topics</a>
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,123 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<style>
+  .container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem;
+    font-family: sans-serif;
+    color: #333;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .post {
+    background: #f8faff;
+    border: 1px solid #cce;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .post-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  .post-meta {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .other-topics {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .pagination, .page-size {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  .pagination a {
+    background: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    margin: 0 0.5rem;
+  }
+
+  .pagination span {
+    margin: 0 0.5rem;
+  }
+
+  select {
+    padding: 0.4rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+</style>
+
+<div class="container">
+  <h1>Blog Posts</h1>
+
+  {% for post in results.blog_posts %}
+    <div class="post">
+      <div class="post-title">{{ post.title }}</div>
+      <hr>
+      <div class="post-meta">
+        Topic: {{ post.topic.title }}
+        <br />
+        Author: {{ post.author.name }}
+      </div>
+      <div>
+        <p>{{ post.content|truncatewords:100 }}</p>
+      </div>
+      <hr>
+      <div>
+        <strong>Other topics by author:</strong>
+        <ul class="other-topics">
+          {% for other_topic in post.other_topics_by_author %}
+            <li>{{ other_topic.title }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="page-size">
+    <form method="get">
+      <label for="page_size">Items per page:</label>
+      <select id="page_size" name="page_size" onchange="this.form.submit()">
+        <option value="10" {% if request.GET.page_size == "10" or not request.GET.page_size %}selected{% endif %}>10</option>
+        <option value="25" {% if request.GET.page_size == "25" %}selected{% endif %}>25</option>
+        <option value="50" {% if request.GET.page_size == "50" %}selected{% endif %}>50</option>
+      </select>
+    </form>
+  </div>
+
+  <div class="pagination">
+    <a
+        href="{{ previous }}"
+        {% if not previous %}style="pointer-events: none; background: gray;" aria-disabled="true"{% endif %}
+    >
+      ← Previous
+    </a>
+    <span>Page {{ page_number }} of {{ num_pages }}</span>
+    <a
+        href="{{ next }}"
+        {% if not next %}style="pointer-events: none; background: gray;" aria-disabled="true"{% endif %}
+    >
+      Next →
+    </a>
+  </div>
+</div>
+{% endblock %}
